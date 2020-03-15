@@ -36,6 +36,7 @@ def main():
     # create_clustering_data()
     hierarchical_clustering()
 
+
 #Task 1
 def add_features():
     a = pd.to_datetime(pd.Series(df['Snapshot Date']), format='%m/%d/%Y 0:00')
