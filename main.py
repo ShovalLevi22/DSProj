@@ -1,12 +1,12 @@
 import pandas as pd
-from sklearn.tree import DecisionTreeClassifier # Import Decision Tree Classifier
-from sklearn.model_selection import train_test_split # Import train_test_split function
-from sklearn import metrics #Import scikit-learn metrics module for accuracy calculation
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+from sklearn.preprocessing import OrdinalEncoder
 from sklearn.naive_bayes import GaussianNB
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.interpolate import interp1d, interpolate
+from scipy.interpolate import interp1d
 from itertools import cycle
 import math
 import scipy.cluster.hierarchy as shc
@@ -90,8 +90,11 @@ def decision_tree(X_train, y_train,X_test, y_test):
 
     # Predict the response for test dataset
     y_pred = clf.predict(X_test)
+
     # plot_statistics(y_test,y_pred)
     print("Accuracy decision tree:",metrics.accuracy_score(y_test,y_pred))
+
+    #print tree image (mot recommended
 
     # dot_data = StringIO()
     # export_graphviz(clf,out_file=dot_data,
@@ -99,8 +102,6 @@ def decision_tree(X_train, y_train,X_test, y_test):
     #                 special_characters=True,feature_names=['WeekDay','Snapshot Date','Checkin Date','DayDiff','Hotel Name'],class_names=['1','2','3','4'])
     # graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
     # graph.write_png('diabetes.png')
-
-
 
 def naive_bayes(X_train, y_train,X_test, y_test):
     gnb = GaussianNB()
@@ -115,7 +116,7 @@ def naive_bayes(X_train, y_train,X_test, y_test):
     # roc = metrics.roc_auc_score(y_test,y_pred)
     # plot_statistics(y_test,y_pred)
 
-def plot_statistics(y_test,y_pred,n_classes = 4):
+def plot_statistics(y_test,y_pred,n_classes = 4): #dosent work yet
     y_test = y_test.to_numpy()
     fpr = dict()
     tpr = dict()
@@ -221,15 +222,11 @@ def create_clustering_data():
         row = []
         for d in dates:
             for n in [1,2,3,4]: #the 4 discount codes
-                # price = temp_df[(df["Hotel Name"] == h)]
-                # price = price[df["Checkin Date"] == d]
-                # price = price[df["Discount Code"] == n]
                 price = (temp_df[(temp_df["Hotel Name"] == h) & (temp_df["Checkin Date"] == d) & (temp_df["Discount Code"] == n)]['Discount Price'].min())
                 if math.isnan(price):
                     price = -1
                 row.append(price)
         input_row = [((i - min(i for i in row if i >= 0))/(max(row)-min(row)))*100 if i != -1 else i for i in row]
-        # row = [(float(i) / max(row))*100 if i != -1 else i for i in row]
         input_row.insert(0,h)
         a_series = pd.Series(input_row,index=new_df.columns)
         new_df = new_df.append(a_series,ignore_index=True)
