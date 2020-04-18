@@ -16,9 +16,16 @@ from IPython.display import Image
 import pydotplus
 
 
+
+
+
 df = pd.read_csv("hotels_data.csv")
 # le = LabelEncoder()
 enc = OrdinalEncoder()
+
+from pyspark import SparkContext
+
+
 
 
 def main():
@@ -32,9 +39,13 @@ def main():
     # naive_bayes(X_train,y_train,X_test,y_test)
 
     # Task_3
-
-    # create_clustering_data()
+    create_clustering_data()
     hierarchical_clustering()
+
+    # Task_4
+    # spark_decision_tree()
+    # spark_naive_bayes()
+
 
 
 #Task 1
@@ -93,6 +104,7 @@ def decision_tree(X_train, y_train,X_test, y_test):
 
     # plot_statistics(y_test,y_pred)
     print("Accuracy decision tree:",metrics.accuracy_score(y_test,y_pred))
+    print("Accuracy decision tree:", metrics.average_precision_score(y_test, y_pred))
 
     #print tree image (mot recommended
 
@@ -206,6 +218,7 @@ def plot_statistics(y_test,y_pred,n_classes = 4): #dosent work yet
     # plt.legend(loc="lower right")
     # plt.show()
 
+#Task 3
 def create_clustering_data():
     hotels = df["Hotel Name"].value_counts().head(150).index.tolist()
     temp_df = df[df["Hotel Name"].isin(hotels)]
@@ -242,7 +255,8 @@ def hierarchical_clustering():
     plt.title("Dendrograms")
     plt.xlabel('sample index')
     only_data = data_scaled.set_index("Hotel Name")
-    only_data = only_data.drop("Unnamed: 0", axis=1)
+    #print(only_data.show())
+    #only_data = only_data.drop("Unnamed: 0", axis=1)
     res = shc.linkage(only_data, method='ward')
     names = data_scaled["Hotel Name"].tolist()
     dend = shc.dendrogram(res, no_plot=True)
