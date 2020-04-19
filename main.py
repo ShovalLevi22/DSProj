@@ -14,6 +14,7 @@ from six import StringIO
 from sklearn.tree import export_graphviz
 from IPython.display import Image
 import pydotplus
+from spark import spark_decision_tree, spark_naive_bayes
 
 
 
